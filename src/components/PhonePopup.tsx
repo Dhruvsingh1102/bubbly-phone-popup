@@ -3,117 +3,75 @@ import { useState } from 'react';
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { X } from "lucide-react";
-import { useToast } from "@/components/ui/use-toast";
-import { Checkbox } from "@/components/ui/checkbox";
 
 const PhonePopup = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [acceptedTerms, setAcceptedTerms] = useState(false);
-  const { toast } = useToast();
-
-  const handlePhoneSubmit = () => {
-    if (phoneNumber.replace(/\D/g, '').length < 10) {
-      toast({
-        title: "Invalid phone number",
-        description: "Please enter a valid phone number",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (!acceptedTerms) {
-      toast({
-        title: "Terms & Conditions",
-        description: "Please accept the terms and conditions",
-        variant: "destructive",
-      });
-      return;
-    }
-    
-    toast({
-      title: "Success!",
-      description: "Phone number submitted successfully",
-    });
-    setIsOpen(false);
-  };
-
-  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/\D/g, '');
-    if (value.length <= 10) {
-      setPhoneNumber(value);
-    }
-  };
+  const [isOpen, setIsOpen] = useState(true);
+  const [couponCode, setCouponCode] = useState('');
 
   return (
-    <div className="flex flex-col items-center">
-      <Button 
-        onClick={() => setIsOpen(true)}
-        className="bg-white text-black hover:bg-gray-100 border border-gray-200 shadow-sm transition-all duration-300 px-6 py-2 rounded-full"
-      >
-        Enter Phone Number
-      </Button>
-
-      <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="sm:max-w-md bg-white border border-gray-200 shadow-lg p-6">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-bold text-center w-full">ENTER PHONE NUMBER</h2>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="absolute right-4 top-4 h-8 w-8 rounded-full"
-              onClick={() => setIsOpen(false)}
-            >
-              <X className="h-4 w-4" />
-            </Button>
-          </div>
-
-          <div className="space-y-4">
-            <div className="flex gap-2">
-              <div className="flex-shrink-0 w-16">
-                <Input
-                  type="text"
-                  value="+91"
-                  disabled
-                  className="h-12 text-lg bg-gray-50 border border-gray-300 text-center"
-                />
-              </div>
-              <div className="flex-grow">
-                <Input
-                  type="tel"
-                  placeholder="Enter phone number"
-                  value={phoneNumber}
-                  onChange={handlePhoneChange}
-                  className="h-12 text-lg border border-gray-300"
-                />
-              </div>
-            </div>
-
-            <div className="flex items-center space-x-2">
-              <Checkbox 
-                id="terms" 
-                checked={acceptedTerms}
-                onCheckedChange={(checked) => setAcceptedTerms(checked as boolean)}
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogContent className="sm:max-w-[380px] p-0 border-none bg-white">
+        <div className="space-y-4 p-4">
+          {/* Header with Icon and Title */}
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+              <img 
+                src="/lovable-uploads/5903d0f4-5635-4ab8-bed6-d7dd1ec6523a.png" 
+                alt="SSC Icon" 
+                className="w-8 h-8 object-contain"
               />
-              <label
-                htmlFor="terms"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-              >
-                TERMS&CONDITION AND PRIVACY POLICY
-              </label>
+            </div>
+            <h2 className="font-bold text-[15px] leading-tight">
+              SSC-CGL- 2024+23+22+21+20
+              <br />
+              PRIVIOUS YEAR QUESTIONS
+            </h2>
+          </div>
+
+          {/* Price Details */}
+          <div className="space-y-3">
+            <div className="flex justify-between items-center">
+              <span className="text-gray-600">PRICE ( INCLUDING GST )</span>
+              <span className="font-medium">Rs. 199</span>
             </div>
 
-            <Button
-              onClick={handlePhoneSubmit}
-              className="w-full h-12 bg-[#FF5722] hover:bg-[#F4511E] text-white transition-all duration-300 rounded font-semibold"
-            >
-              NEXT
-            </Button>
+            {/* Coupon Input */}
+            <div className="flex gap-2">
+              <Input
+                placeholder="COUPON"
+                value={couponCode}
+                onChange={(e) => setCouponCode(e.target.value)}
+                className="flex-grow uppercase"
+              />
+              <Button 
+                className="bg-[#F97316] hover:bg-[#F97316]/90 text-white px-6"
+              >
+                APPLY
+              </Button>
+            </div>
+
+            {/* Discount and Total */}
+            <div className="space-y-2">
+              <div className="flex justify-between items-center">
+                <span className="text-gray-600">NET DISCOUNT</span>
+                <span className="font-medium">Rs. 0</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-gray-600">TOTAL</span>
+                <span className="font-medium">Rs. 199</span>
+              </div>
+            </div>
           </div>
-        </DialogContent>
-      </Dialog>
-    </div>
+
+          {/* Buy Now Button */}
+          <Button 
+            className="w-full bg-[#F97316] hover:bg-[#F97316]/90 text-white py-6 text-lg font-medium"
+          >
+            BUY NOW
+          </Button>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 };
 
