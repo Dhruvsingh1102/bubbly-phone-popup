@@ -5,10 +5,12 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const PhonePopup = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState('');
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
   const { toast } = useToast();
 
   const handlePhoneSubmit = () => {
@@ -16,6 +18,15 @@ const PhonePopup = () => {
       toast({
         title: "Invalid phone number",
         description: "Please enter a valid phone number",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!acceptedTerms) {
+      toast({
+        title: "Terms & Conditions",
+        description: "Please accept the terms and conditions",
         variant: "destructive",
       });
       return;
@@ -28,17 +39,10 @@ const PhonePopup = () => {
     setIsOpen(false);
   };
 
-  const formatPhoneNumber = (value: string) => {
-    const phone = value.replace(/\D/g, '');
-    if (phone.length < 4) return phone;
-    if (phone.length < 7) return `(${phone.slice(0, 3)}) ${phone.slice(3)}`;
-    return `(${phone.slice(0, 3)}) ${phone.slice(3, 6)}-${phone.slice(6, 10)}`;
-  };
-
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const formatted = formatPhoneNumber(e.target.value);
-    if (formatted.replace(/\D/g, '').length <= 10) {
-      setPhoneNumber(formatted);
+    const value = e.target.value.replace(/\D/g, '');
+    if (value.length <= 10) {
+      setPhoneNumber(value);
     }
   };
 
@@ -52,13 +56,13 @@ const PhonePopup = () => {
       </Button>
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="sm:max-w-md backdrop-blur-lg bg-white/90 border border-gray-100 shadow-lg">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold text-gray-900">Enter your phone number</h2>
+        <DialogContent className="sm:max-w-md bg-white border border-gray-200 shadow-lg p-6">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-xl font-bold text-center w-full">ENTER PHONE NUMBER</h2>
             <Button
               variant="ghost"
               size="icon"
-              className="h-8 w-8 rounded-full"
+              className="absolute right-4 top-4 h-8 w-8 rounded-full"
               onClick={() => setIsOpen(false)}
             >
               <X className="h-4 w-4" />
@@ -66,21 +70,45 @@ const PhonePopup = () => {
           </div>
 
           <div className="space-y-4">
-            <div className="space-y-2">
-              <Input
-                type="tel"
-                placeholder="(123) 456-7890"
-                value={phoneNumber}
-                onChange={handlePhoneChange}
-                className="h-12 text-lg bg-white/50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-gray-200 transition-all duration-300"
+            <div className="flex gap-2">
+              <div className="flex-shrink-0 w-16">
+                <Input
+                  type="text"
+                  value="+91"
+                  disabled
+                  className="h-12 text-lg bg-gray-50 border border-gray-300 text-center"
+                />
+              </div>
+              <div className="flex-grow">
+                <Input
+                  type="tel"
+                  placeholder="Enter phone number"
+                  value={phoneNumber}
+                  onChange={handlePhoneChange}
+                  className="h-12 text-lg border border-gray-300"
+                />
+              </div>
+            </div>
+
+            <div className="flex items-center space-x-2">
+              <Checkbox 
+                id="terms" 
+                checked={acceptedTerms}
+                onCheckedChange={(checked) => setAcceptedTerms(checked as boolean)}
               />
+              <label
+                htmlFor="terms"
+                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                TERMS&CONDITION AND PRIVACY POLICY
+              </label>
             </div>
 
             <Button
               onClick={handlePhoneSubmit}
-              className="w-full h-12 bg-black hover:bg-gray-900 text-white transition-all duration-300 rounded-xl"
+              className="w-full h-12 bg-[#FF5722] hover:bg-[#F4511E] text-white transition-all duration-300 rounded font-semibold"
             >
-              Submit
+              NEXT
             </Button>
           </div>
         </DialogContent>
